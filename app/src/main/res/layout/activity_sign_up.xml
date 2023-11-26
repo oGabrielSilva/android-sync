@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.auth.SignInActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/c"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:fontFamily="@font/ubuntu_bold"
+            android:text="@string/sign_up_title"
+            android:textColor="@color/title"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toTopOf="@id/goBack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.08" />
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="@string/sign_up_welcome"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appName" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:backgroundTint="@color/primary"
+            app:cardCornerRadius="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/welcome">
+
+            <ImageView
+                android:id="@+id/profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@string/profile"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:src="@drawable/baseline_account_circle_24"
+                app:tint="@color/text"
+                android:id="@+id/profilePlaceholder"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:importantForAccessibility="no" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/removeProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/remove"
+            android:textColor="@color/link"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card" />
+
+        <TextView
+            android:id="@+id/label_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="@string/name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/removeProfile" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:autofillHints="name"
+            android:background="@drawable/input"
+            android:drawableTint="@color/text"
+            android:hint="@string/name_hint"
+            android:inputType="textPersonName|textAutoComplete"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_name" />
+
+        <TextView
+            android:id="@+id/nameSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name_small"
+            android:textAlignment="center"
+            android:textColor="@color/warning"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <TextView
+            android:id="@+id/labelYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="@string/birth_year"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameSmall" />
+
+        <EditText
+            android:id="@+id/year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/input"
+            android:hint="@string/year_hint"
+            android:inputType="number"
+            android:maxLength="4"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelYear" />
+
+        <TextView
+            android:id="@+id/yearSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/year_small"
+            android:textAlignment="center"
+            android:textColor="@color/warning"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/year" />
+
+        <TextView
+            android:id="@+id/male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:text="@string/male"
+            android:textColor="@color/textPlaceholder"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/female"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yearSmall" />
+
+        <TextView
+            android:id="@+id/female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/female"
+            android:textColor="@color/textPlaceholder"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/other"
+            app:layout_constraintStart_toEndOf="@id/male"
+            app:layout_constraintTop_toTopOf="@+id/male" />
+
+        <TextView
+            android:id="@+id/other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/other"
+            android:textColor="@color/textPlaceholder"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/female"
+            app:layout_constraintTop_toTopOf="@+id/male" />
+
+        <Button
+            android:id="@+id/goBack"
+            style="@style/ButtonTheme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/go_back"
+            android:textColor="@color/danger"
+            app:layout_constraintEnd_toStartOf="@id/signUpButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/male" />
+
+        <Button
+            android:id="@+id/signUpButton"
+            style="@style/ButtonTheme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/sign_up"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/goBack"
+            app:layout_constraintTop_toTopOf="@id/goBack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terms"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signUpButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
