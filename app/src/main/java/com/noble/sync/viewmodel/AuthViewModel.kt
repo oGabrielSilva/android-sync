@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.noble.sync.Constants
+import com.noble.sync.res.Constants
 import com.noble.sync.enum.SupportedGenres
 
 class AuthViewModel : ViewModel() {

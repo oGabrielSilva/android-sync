@@ -1,4 +1,4 @@
-package com.noble.sync
+package com.noble.sync.res
 
 import java.util.Calendar
 

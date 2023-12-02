@@ -2,13 +2,11 @@ package com.noble.sync.view.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
-import com.noble.sync.Constants
+import com.noble.sync.res.Constants
 import com.noble.sync.R
 import com.noble.sync.databinding.ActivitySignUpBinding
 import com.noble.sync.enum.SupportedGenres

@@ -8,7 +8,7 @@ import android.text.method.PasswordTransformationMethod
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
-import com.noble.sync.Constants
+import com.noble.sync.res.Constants
 import com.noble.sync.R
 import com.noble.sync.databinding.ActivitySignInBinding
 import com.noble.sync.util.Animations
