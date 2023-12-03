@@ -7,5 +7,6 @@ class Constants {
         val EMAIL_REGEX = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
         val MIN_YEAR = Calendar.getInstance().get(Calendar.YEAR) - 14
         val MAX_YEAR = Calendar.getInstance().get(Calendar.YEAR) - 55
+        val USER_DB_COLLECTION = "users"
     }
 }

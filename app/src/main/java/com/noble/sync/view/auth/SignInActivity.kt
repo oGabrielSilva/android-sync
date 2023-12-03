@@ -5,24 +5,68 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Firebase
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
 import com.noble.sync.res.Constants
 import com.noble.sync.R
+import com.noble.sync.auth.SyncAuth
 import com.noble.sync.databinding.ActivitySignInBinding
 import com.noble.sync.util.Animations
 import com.noble.sync.viewmodel.AuthViewModel
 
 class SignInActivity : AppCompatActivity() {
+    companion object {
+        private const val SIGN_IN_GOOGLE_REQUEST = 3001
+    }
+
+    private lateinit var authSystem: SyncAuth
     private lateinit var viewModel: AuthViewModel
     private lateinit var binding: ActivitySignInBinding
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val activityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            Log.i("TEST", it.toString())
+            if (it.resultCode == RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    val account = task.getResult(ApiException::class.java)!!
+                    Log.d("TEST", "firebaseAuthWithGoogle:" + account.id)
+                    authWithGoogle(account.idToken!!)
+                } catch (e: ApiException) {
+                    // Google Sign In failed, update UI appropriately
+                    Log.w("TEST", "Google sign in failed", e)
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         binding = ActivitySignInBinding.inflate(layoutInflater)
+
+        googleSignInClient = GoogleSignIn.getClient(
+            this, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail()
+                .build()
+        )
+
+        authSystem = SyncAuth(Firebase.auth, Firebase.firestore, Firebase.storage)
 
         setContentView(binding.root)
         setObservers()
@@ -42,11 +86,15 @@ class SignInActivity : AppCompatActivity() {
         }
 
         binding.signInButton.setOnClickListener {
-            if(formIsOK()) signIn()
+            if (formIsOK()) signIn()
         }
 
         binding.signUpButton.setOnClickListener {
-            if(formIsOK()) signUp()
+            if (formIsOK()) signUp()
+        }
+
+        binding.signInGoogle.setOnClickListener {
+            googleSignIn()
         }
     }
 
@@ -73,8 +121,7 @@ class SignInActivity : AppCompatActivity() {
             binding.password.setSelection(binding.password.length())
             binding.buttonPassword.setImageDrawable(
                 AppCompatResources.getDrawable(
-                    this,
-                    if (it) R.drawable.visibility_off_24 else R.drawable.visibility_24
+                    this, if (it) R.drawable.visibility_off_24 else R.drawable.visibility_24
                 )
             )
         }
@@ -96,7 +143,18 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun signIn() {
-        TODO("Not yet implemented")
+        val email = viewModel.email.value!!
+        val password = viewModel.password.value!!
+        authSystem.auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.i("TEST", task.result.toString())
+                } else {
+                    Log.w("TEST", "signInWithEmail:failure", task.exception)
+                    Snackbar.make(binding.root, R.string.error_credentials, Snackbar.LENGTH_LONG)
+                        .show()
+                }
+            }
     }
 
     private fun signUp() {
@@ -106,5 +164,26 @@ class SignInActivity : AppCompatActivity() {
         bundle.putString("password", viewModel.password.value)
         i.putExtras(bundle)
         startActivity(i)
+    }
+
+    private fun googleSignIn() {
+        activityResult.launch(googleSignInClient.signInIntent)
+    }
+
+    private fun authWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        authSystem.auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.i("TEST", "signInWithCredential:success")
+                } else {
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.generic_error),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+            }
     }
 }

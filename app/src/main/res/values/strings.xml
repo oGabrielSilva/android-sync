@@ -15,7 +15,7 @@
     <string name="sign_up_title">Complete seu cadastro</string>
     <string name="name">Nome</string>
     <string name="name_hint">Robin</string>
-    <string name="name_small">Pelo menos 2 caracteres</string>
+    <string name="name_small">Pelo menos 2 caracteres. Esse nome NÃO será visível para outros usuários</string>
     <string name="year_hint">2001</string>
     <string name="birth_year">Em qual ano você nasceu?</string>
     <string name="year_small">Você precisa ter nascido pelo menos em</string>
@@ -26,4 +26,12 @@
     <string name="profile">Perfil</string>
     <string name="remove">Remover</string>
     <string name="terms">Ao criar a sua conta, você estará concordando com nossos termos</string>
+    <string name="sign_in_google">Entrar com Google</string>
+    <string name="your_name">Seu nome</string>
+    <string name="nick">Nickname</string>
+    <string name="generic_error">Oopss... obtivemos um erro. Mas não foi sua culpa</string>
+    <string name="nickname_hint">Miss Sunday</string>
+    <string name="nickname_small">Pelo menos 2 caracteres. Esse nome será visível para outros usuários</string>
+    <string name="error_credentials">Suas credenciais estão incorretas. Verifique a senha ou se o email está cadastrado</string>
+    <string name="web_client_id">407382943479-95m8ds0vli45jnb5d1oiudkal1b34ik2.apps.googleusercontent.com</string>
 </resources>

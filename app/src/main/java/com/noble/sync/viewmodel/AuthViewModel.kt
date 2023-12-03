@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.noble.sync.res.Constants
 import com.noble.sync.enum.SupportedGenres
+import com.noble.sync.model.User
 
 class AuthViewModel : ViewModel() {
     private val emailLiveData = MutableLiveData("")
@@ -14,7 +15,8 @@ class AuthViewModel : ViewModel() {
     private val nameLiveData = MutableLiveData("")
     private val yearLiveData = MutableLiveData(Constants.MIN_YEAR)
     private val genderLiveData = MutableLiveData(SupportedGenres.MALE)
-    private val profileUriLiveData = MutableLiveData<Uri>(null)
+    private val profileURLLiveData = MutableLiveData<String>(null)
+    private val nicknameLiveData = MutableLiveData("")
 
     val email: LiveData<String> = emailLiveData;
     val name: LiveData<String> = nameLiveData;
@@ -22,7 +24,8 @@ class AuthViewModel : ViewModel() {
     val password: LiveData<String> = passwordLiveData;
     val showPassword: LiveData<Boolean> = showPasswordLiveData
     val gender: LiveData<SupportedGenres> = genderLiveData
-    val uri: LiveData<Uri> = profileUriLiveData
+    val uri: LiveData<String> = profileURLLiveData
+    val nickname: LiveData<String> = nicknameLiveData
 
     fun changeEmailValue(email: String) {
         emailLiveData.value = email
@@ -48,11 +51,19 @@ class AuthViewModel : ViewModel() {
         genderLiveData.value = gender
     }
 
-    fun changeUri(uri: Uri?) {
-        if (uri != null) profileUriLiveData.value = uri
+    fun changeURL(uri: Uri?) {
+        if (uri != null) profileURLLiveData.value = uri.toString()
     }
 
     fun resetProfileUri() {
-        profileUriLiveData.value = null
+        profileURLLiveData.value = null
+    }
+
+    fun changeNickname(nick: String) {
+        nicknameLiveData.value = nick
+    }
+
+    fun catchUser(): User {
+        return User(nickname.value!!, name.value!!, email.value!!, year.value!!, gender.value!!, uri.value)
     }
 }
