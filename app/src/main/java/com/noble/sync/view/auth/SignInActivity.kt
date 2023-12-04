@@ -25,13 +25,11 @@ import com.noble.sync.R
 import com.noble.sync.auth.SyncAuth
 import com.noble.sync.databinding.ActivitySignInBinding
 import com.noble.sync.util.Animations
+import com.noble.sync.view.dialog.ProgressDialog
 import com.noble.sync.viewmodel.AuthViewModel
 
 class SignInActivity : AppCompatActivity() {
-    companion object {
-        private const val SIGN_IN_GOOGLE_REQUEST = 3001
-    }
-
+    private lateinit var dialog: ProgressDialog
     private lateinit var authSystem: SyncAuth
     private lateinit var viewModel: AuthViewModel
     private lateinit var binding: ActivitySignInBinding
@@ -39,6 +37,7 @@ class SignInActivity : AppCompatActivity() {
     private val activityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             Log.i("TEST", it.toString())
+            dialog.show(getString(R.string.wait))
             if (it.resultCode == RESULT_OK) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
                 try {
@@ -49,16 +48,17 @@ class SignInActivity : AppCompatActivity() {
                 } catch (e: ApiException) {
                     // Google Sign In failed, update UI appropriately
                     Log.w("TEST", "Google sign in failed", e)
+                    dialog.hidden()
                 }
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         binding = ActivitySignInBinding.inflate(layoutInflater)
-
+        setContentView(binding.root)
+        dialog = ProgressDialog(this)
         googleSignInClient = GoogleSignIn.getClient(
             this, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))
@@ -68,7 +68,6 @@ class SignInActivity : AppCompatActivity() {
 
         authSystem = SyncAuth(Firebase.auth, Firebase.firestore, Firebase.storage)
 
-        setContentView(binding.root)
         setObservers()
         setListeners()
     }
@@ -109,9 +108,8 @@ class SignInActivity : AppCompatActivity() {
 
         viewModel.password.observe(this) {
             binding.password.setTextColor(
-                if (it.length >= 8) getColor(R.color.title) else getColor(
-                    R.color.danger
-                )
+                if (it.length >= 8) getColor(R.color.title)
+                else getColor(R.color.danger)
             )
         }
 
@@ -143,6 +141,8 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun signIn() {
+        dialog.show(getString(R.string.wait))
+
         val email = viewModel.email.value!!
         val password = viewModel.password.value!!
         authSystem.auth.signInWithEmailAndPassword(email, password)
@@ -150,6 +150,7 @@ class SignInActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     Log.i("TEST", task.result.toString())
                 } else {
+                    dialog.hidden()
                     Log.w("TEST", "signInWithEmail:failure", task.exception)
                     Snackbar.make(binding.root, R.string.error_credentials, Snackbar.LENGTH_LONG)
                         .show()
@@ -178,6 +179,7 @@ class SignInActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.i("TEST", "signInWithCredential:success")
                 } else {
+                    dialog.hidden()
                     Snackbar.make(
                         binding.root,
                         getString(R.string.generic_error),

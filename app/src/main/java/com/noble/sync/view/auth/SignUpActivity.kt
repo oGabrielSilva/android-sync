@@ -18,9 +18,11 @@ import com.noble.sync.auth.SyncAuth
 import com.noble.sync.databinding.ActivitySignUpBinding
 import com.noble.sync.enum.SupportedGenres
 import com.noble.sync.util.Animations
+import com.noble.sync.view.dialog.ProgressDialog
 import com.noble.sync.viewmodel.AuthViewModel
 
 class SignUpActivity : AppCompatActivity() {
+    private lateinit var dialog: ProgressDialog
     private lateinit var authSystem: SyncAuth
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var viewModel: AuthViewModel
@@ -35,6 +37,7 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        dialog = ProgressDialog(this)
 
         binding.yearSmall.text =
             binding.yearSmall.text.toString().plus(" ".plus(Constants.MIN_YEAR.toString()))
@@ -170,17 +173,19 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun signUp() {
+        dialog.show(getString(R.string.wait))
         val user = viewModel.catchUser()
         authSystem.auth.createUserWithEmailAndPassword(user.email, viewModel.password.value!!)
             .addOnCompleteListener(this) {
                 val success = authSystem.updateUser(user, this)
-                if (!success)
+                if (!success) {
+                    dialog.hidden()
                     Snackbar.make(
                         binding.root,
                         R.string.generic_error,
                         Snackbar.LENGTH_LONG
                     ).show()
-                else
+                } else
                     finish()
             }
     }

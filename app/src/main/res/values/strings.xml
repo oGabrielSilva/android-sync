@@ -29,6 +29,7 @@
     <string name="sign_in_google">Entrar com Google</string>
     <string name="your_name">Seu nome</string>
     <string name="nick">Nickname</string>
+    <string name="wait">Aguarde...</string>
     <string name="generic_error">Oopss... obtivemos um erro. Mas não foi sua culpa</string>
     <string name="nickname_hint">Miss Sunday</string>
     <string name="nickname_small">Pelo menos 2 caracteres. Esse nome será visível para outros usuários</string>
