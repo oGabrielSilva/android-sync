@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -15,11 +21,15 @@
         android:theme="@style/Theme.Sync"
         tools:targetApi="31">
         <activity
-            android:name=".view.auth.SignInActivity"
+            android:name=".ui.view.home.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sync.NoActionBar" />
+        <activity
+            android:name=".ui.view.auth.SignInActivity"
             android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".view.auth.SignUpActivity"
+            android:name=".ui.view.auth.SignUpActivity"
             android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity

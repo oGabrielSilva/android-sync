@@ -1,4 +1,4 @@
-package com.noble.sync.view.auth
+package com.noble.sync.ui.view.auth
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +25,8 @@ import com.noble.sync.R
 import com.noble.sync.auth.SyncAuth
 import com.noble.sync.databinding.ActivitySignInBinding
 import com.noble.sync.util.Animations
-import com.noble.sync.view.dialog.ProgressDialog
+import com.noble.sync.ui.dialog.ProgressDialog
+import com.noble.sync.ui.view.home.HomeActivity
 import com.noble.sync.viewmodel.AuthViewModel
 
 class SignInActivity : AppCompatActivity() {
@@ -50,7 +51,7 @@ class SignInActivity : AppCompatActivity() {
                     Log.w("TEST", "Google sign in failed", e)
                     dialog.hidden()
                 }
-            }
+            } else dialog.hidden()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,7 +149,9 @@ class SignInActivity : AppCompatActivity() {
         authSystem.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    startActivity(Intent(this, HomeActivity::class.java))
                     Log.i("TEST", task.result.toString())
+                    finish()
                 } else {
                     dialog.hidden()
                     Log.w("TEST", "signInWithEmail:failure", task.exception)
@@ -178,6 +181,8 @@ class SignInActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.i("TEST", "signInWithCredential:success")
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
                 } else {
                     dialog.hidden()
                     Snackbar.make(

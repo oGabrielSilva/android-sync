@@ -1,4 +1,4 @@
-package com.noble.sync.view.dialog
+package com.noble.sync.ui.dialog
 
 import android.app.Activity
 import android.app.AlertDialog

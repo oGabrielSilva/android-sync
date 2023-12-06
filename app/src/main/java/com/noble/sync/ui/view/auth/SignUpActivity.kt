@@ -1,7 +1,13 @@
-package com.noble.sync.view.auth
+package com.noble.sync.ui.view.auth
 
+import android.content.Intent
+import android.graphics.ImageDecoder
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
@@ -18,7 +24,8 @@ import com.noble.sync.auth.SyncAuth
 import com.noble.sync.databinding.ActivitySignUpBinding
 import com.noble.sync.enum.SupportedGenres
 import com.noble.sync.util.Animations
-import com.noble.sync.view.dialog.ProgressDialog
+import com.noble.sync.ui.dialog.ProgressDialog
+import com.noble.sync.ui.view.home.HomeActivity
 import com.noble.sync.viewmodel.AuthViewModel
 
 class SignUpActivity : AppCompatActivity() {
@@ -27,9 +34,10 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var viewModel: AuthViewModel
     private val shakeAnim = Animations.getShake(500, 10f, 4f)
-    private val requestGallery = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        viewModel.changeURL(it)
-    }
+    private val requestGallery =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.changeURL(it.data?.data)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -169,7 +177,10 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun pickImage() {
-        requestGallery.launch("image/*")
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "image/*"
+        requestGallery.launch(intent)
     }
 
     private fun signUp() {
@@ -177,16 +188,50 @@ class SignUpActivity : AppCompatActivity() {
         val user = viewModel.catchUser()
         authSystem.auth.createUserWithEmailAndPassword(user.email, viewModel.password.value!!)
             .addOnCompleteListener(this) {
-                val success = authSystem.updateUser(user, this)
-                if (!success) {
+                val bitmap = if (user.photoURL != null) {
+                    when {
+                        Build.VERSION.SDK_INT >= 29 -> {
+                            val source = ImageDecoder.createSource(
+                                this.contentResolver,
+                                user.photoURL?.toUri()!!
+                            )
+                            ImageDecoder.decodeBitmap(source)
+                        }
+
+                        else -> MediaStore.Images.Media.getBitmap(
+                            this.contentResolver,
+                            user.photoURL?.toUri()!!
+                        )
+                    }
+                } else null
+                authSystem.updateUser(user, {
+                    if (bitmap != null) {
+                        authSystem.updatePhoto(bitmap, "avatar") {
+                            if (it == null) {
+                                startActivity(Intent(this, HomeActivity::class.java))
+                                finishAffinity()
+                            } else {
+                                dialog.hidden()
+                                Snackbar.make(
+                                    binding.root,
+                                    R.string.generic_error,
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    startActivity(Intent(this, HomeActivity::class.java))
+                                    finishAffinity()
+                                }, 1500)
+                            }
+                        }
+                    }
+                }) {
                     dialog.hidden()
                     Snackbar.make(
                         binding.root,
                         R.string.generic_error,
                         Snackbar.LENGTH_LONG
                     ).show()
-                } else
-                    finish()
+                }
             }
     }
 }
