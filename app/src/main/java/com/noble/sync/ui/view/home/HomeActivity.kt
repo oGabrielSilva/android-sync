@@ -1,11 +1,11 @@
 package com.noble.sync.ui.view.home
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import androidx.compose.material3.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -16,12 +16,11 @@ import com.noble.sync.adapter.HomeViewPagerAdapter
 import com.noble.sync.auth.SyncAuth
 import com.noble.sync.databinding.ActivityHomeBinding
 import com.noble.sync.util.TabNavigationOption
-import com.noble.sync.ui.fragment.ChatFragment
+import com.noble.sync.ui.fragment.SynchroniesFragment
 import com.noble.sync.ui.fragment.ExploreFragment
-import com.noble.sync.ui.fragment.SettingsFragment
+import com.noble.sync.ui.fragment.PanelFragment
 import com.noble.sync.ui.view.auth.SignInActivity
 import com.squareup.picasso.Picasso
-import java.net.URL
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -34,23 +33,24 @@ class HomeActivity : AppCompatActivity() {
 
         configureViewPager2()
         configureAuth()
-
-        Log.d("ERROR3", authSystem.auth.currentUser?.photoUrl.toString())
         reflectAuthOnScreen()
+        addListeners()
     }
 
     private fun configureViewPager2() {
         val viewPager2 = binding.viewPager2
         val options = listOf(
             TabNavigationOption(
-                getString(R.string.tab_chat_title), ChatFragment()
+                getString(R.string.tab_synchronies_title),
+                SynchroniesFragment()
             ),
             TabNavigationOption(
-                getString(R.string.tab_explore_title), ExploreFragment()
+                getString(R.string.tab_explore_title),
+                ExploreFragment()
             ),
             TabNavigationOption(
-                getString(R.string.tab_settings_title), SettingsFragment()
-            )
+                getString(R.string.tab_panel_title), PanelFragment()
+            ),
         )
         val adapter = HomeViewPagerAdapter(options, supportFragmentManager, lifecycle)
 
@@ -76,6 +76,12 @@ class HomeActivity : AppCompatActivity() {
             if (photoURL != null) Picasso.get().load(photoURL).into(binding.cardAvatar)
         } catch (e: Exception) {
             Log.e("ERROR", e.toString())
+        }
+    }
+
+    private fun addListeners() {
+        binding.cardAvatar.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }

@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Sync"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.home.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.home.HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.Sync.NoActionBar" />

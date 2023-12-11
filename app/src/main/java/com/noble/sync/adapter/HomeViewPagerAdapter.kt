@@ -14,7 +14,6 @@ class HomeViewPagerAdapter(
 ) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
-
     override fun getItemCount(): Int {
         return options.size
     }

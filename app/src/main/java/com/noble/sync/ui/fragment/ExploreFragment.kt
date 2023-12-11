@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.noble.sync.R
 
-class ExploreFragment : Fragment() {
+class ExploreFragment() : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
